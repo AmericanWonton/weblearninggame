@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {{/* Here is our meta charset and title */}}
+        {{template "meta-title"}}
+        {{/* Here is our pixel density markup */}}
+        {{template "pixel-dense"}}
+        {{/* Here is our FavIcon */}}
+        {{template "fav-icon1"}}
+        {{/* Here are our fonts */}}
+        {{template "fonts1"}}
+        {{/* Here are our Media Query and stylesheets */}}
+        {{template "media-queries"}}
+        {{/* Here is our Javascript or additional code needed */}}
+        <script src="static/js/loginPage.js"></script>
+    </head>
+    <body>
+        {{/* Here is our header */}}
+        
+        <div class="welcomeDiv">
+            <h1 class="welcomeH1">
+                Welcome to the Webster University Test Learning Game
+            </h1>
+            <p class="welcome"> 
+                Please either create an account or login below.
+            </p>
+        </div>
+
+        <div class="signInDiv">
+            <div class="pullSignDiv">
+                <div class="pullInstructDiv">
+                    <p class="pullInstructP">
+                        Sign-In
+                    </p>
+                </div>
+                <div class="pullOutCredDiv">
+                    <div class="formHolderDiv">
+                        <form id="signInForm" name="signInForm" onload="" action="" METHOD="GET">
+                            <div class="fieldHoldersDiv">
+                                {{/* USERNAME ENTRY */}}
+                                <div class="usernameDivForm">
+                                    <p class="FieldTextP">Username:</p>
+                                </div>
+                                <div class="usernameDivFormValue">
+                                    <input type="text" name="usernameSIN" id="usernameSIN" placeholder="USERNAME" required
+                                    minlength=1 maxlength=20/>
+                                </div>
+                                {{/* PASSWORD ENTRY */}}
+                                <div class="passwordDivForm">
+                                    <p class="FieldTextP">Password:</p>
+                                </div>
+                                <div class="passwordDivFormValue">
+                                    <input type="password" name="passwordSIN" id="passwordSIN" placeholder="password" required
+                                    minlength=1 maxlength=20/>
+                                </div>
+                                {{/* SUBMIT BUTTON DIV */}}
+                                <div class="buttonSubmitDiv">
+                                    <input type="button" name="submitButton" id="submitButton" value="SUBMIT"
+                                    onclick="checkSignIn(this.form)">
+                                </div>
+                                {{/* HIDDEN FORM VALUES FOR REQUEST FUNCTIONALITY */}}
+                                <input type="hidden" id="inputSIN" name="inputSIN" value="signin">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        <div>
+
+        <div class="createAccountDiv">
+            <div class="pullSignDiv">
+                <div class="pullInstructDiv">
+                    <p class="pullInstructP">
+                        Create Account
+                    </p>
+                </div>
+                <div class="pullOutCredDiv">
+                    <div class="formHolderDiv">
+                        <form id="createAccountForm" name="createAccountForm" onload="" action="" METHOD="GET">
+                            <div class="fieldHoldersDiv">
+                                {{/* USERNAME ENTRY */}}
+                                <div class="usernameDivForm">
+                                    <p class="FieldTextP">Username:</p>
+                                </div>
+                                <div class="usernameDivFormValue">
+                                    <input type="text" name="usernameSIN" id="usernameSIN" placeholder="USERNAME" required
+                                    minlength=1 maxlength=20/>
+                                </div>
+                                {{/* PASSWORD ENTRY */}}
+                                <div class="passwordDivForm">
+                                    <p class="FieldTextP">Password:</p>
+                                </div>
+                                <div class="passwordDivFormValue">
+                                    <input type="password" name="passwordSIN" id="passwordSIN" placeholder="password" required
+                                    minlength=1 maxlength=20/>
+                                </div>
+                                {{/* CONFIRM PASSWORD */}}
+                                <div class="passwordDivForm">
+                                    <p class="FieldTextP">Confirm Password:</p>
+                                </div>
+                                <div class="passwordDivFormValue">
+                                    <input type="password" name="passwordConfSIN" id="passwordConfSIN" placeholder="password" required
+                                    minlength=1 maxlength=20/>
+                                </div>
+                                {{/* EMAIL */}}
+                                <div class="emailDivForm">
+                                    <p class="FieldTextP">Email:</p>
+                                </div>
+                                <div class="emailDivFormValue">
+                                    <input type="text" name="emailSIN" id="emailSIN" placeholder="email@example.com" required
+                                    minlength=1 maxlength=400/>
+                                </div>
+                                {{/* SUBMIT BUTTON DIV */}}
+                                <div class="buttonSubmitDiv">
+                                    <input type="button" name="submitButton" id="submitButton" value="SUBMIT"
+                                    onclick="checkCreateAccount(this.form)">
+                                </div>
+                                {{/* HIDDEN FORM VALUES FOR REQUEST FUNCTIONALITY */}}
+                                <input type="hidden" id="inputSIN" name="inputSIN" value="createuser">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {{/* Here is our footer */}}
+    </body>
+</html>

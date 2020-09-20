@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {{/* Here is our meta charset and title */}}
+        {{template "meta-title"}}
+        {{/* Here is our pixel density markup */}}
+        {{template "pixel-dense"}}
+        {{/* Here is our FavIcon */}}
+        {{template "fav-icon1"}}
+        {{/* Here are our fonts */}}
+        {{template "fonts1"}}
+        {{/* Here are our Media Query and stylesheets */}}
+        {{template "media-queries"}}
+        {{/* Here is our Javascript or additional code needed */}}
+    </head>
+    <body>
+        {{/* Here is our header */}}
+        
+        {{/* User will provide themselves a check before continuing */}}
+        <div class="warningDiv">
+            <h1 class="warningH1">
+                Non Webster Staff/Students DO NOT GO FORWARD
+            </h1>
+            <p class="warningP">
+                By clicking 'Agree', you acknowledge that you are either a Webster University
+                Staff or Student. You are subject to any penalties by accessing this webpage
+                without proper authorization.
+            </p>
+        </div>
+        <div class="warningSelectDiv">
+            <div class="warningSelectionDiv">
+                <a class="warningA" href="http://localhost:80/loginPage">
+                    Agree
+                </a>
+            </div>
+            <div class="warningSelectionDiv">
+                <a class="warningA" href="https://www.google.com">
+                    Disagree
+                </a>
+            </div>
+        </div>
+        {{/* Here is our footer */}}
+    </body>
+</html>
