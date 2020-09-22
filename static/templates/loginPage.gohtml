@@ -43,40 +43,40 @@
                                     <p class="FieldTextP">Username:</p>
                                 </div>
                                 <div class="usernameDivFormValue">
-                                    <input type="text" name="usernameSIN" id="usernameSIN" placeholder="USERNAME" required
-                                    minlength=1 maxlength=20/>
+                                    <input type="text" name="usernameSIN" id="usernameSINCreate" placeholder="USERNAME" required
+                                    minlength=6 maxlength=20/>
                                 </div>
                                 {{/* PASSWORD ENTRY */}}
                                 <div class="passwordDivForm">
                                     <p class="FieldTextP">Password:</p>
                                 </div>
                                 <div class="passwordDivFormValue">
-                                    <input type="password" name="passwordSIN" id="passwordSIN" placeholder="password" required
-                                    minlength=1 maxlength=20/>
+                                    <input type="password" name="passwordSIN" id="passwordSINCreate" placeholder="password" required
+                                    minlength=6 maxlength=20/>
                                 </div>
                                 {{/* CONFIRM PASSWORD */}}
                                 <div class="passwordDivForm">
                                     <p class="FieldTextP">Confirm Password:</p>
                                 </div>
                                 <div class="passwordDivFormValue">
-                                    <input type="password" name="passwordConfSIN" id="passwordConfSIN" placeholder="password" required
-                                    minlength=1 maxlength=20/>
+                                    <input type="password" name="passwordConfSIN" id="passwordConfSINCreate" placeholder="password" required
+                                    minlength=6 maxlength=20/>
                                 </div>
                                 {{/* EMAIL */}}
                                 <div class="emailDivForm">
                                     <p class="FieldTextP">Email:</p>
                                 </div>
                                 <div class="emailDivFormValue">
-                                    <input type="text" name="emailSIN" id="emailSIN" placeholder="email@example.com" required
-                                    minlength=1 maxlength=400/>
+                                    <input type="text" name="emailSIN" id="emailSINCreate" placeholder="email@example.com" required
+                                    minlength=5 maxlength=200/>
                                 </div>
                                 {{/* SUBMIT BUTTON DIV */}}
                                 <div class="buttonSubmitDiv">
-                                    <input type="button" name="submitButton" id="submitButton" value="SUBMIT"
+                                    <input type="button" name="submitButton" id="submitButtonCreate" value="SUBMIT"
                                     onclick="checkCreateAccount(this.form)">
                                 </div>
                                 {{/* HIDDEN FORM VALUES FOR REQUEST FUNCTIONALITY */}}
-                                <input type="hidden" id="inputSIN" name="inputSIN" value="createuser">
+                                <input type="hidden" id="inputSINCreate" name="inputSIN" value="createuser">
                             </div>
                         </form>
                     </div>
