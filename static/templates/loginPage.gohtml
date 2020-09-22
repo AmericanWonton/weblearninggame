@@ -17,6 +17,7 @@
     <body>
         {{/* Here is our header */}}
         
+        {{/* Here is our welcome Div with instructions */}}
         <div class="welcomeDiv">
             <h1 class="welcomeH1">
                 Welcome to the Webster University Test Learning Game
@@ -25,56 +26,15 @@
                 Please either create an account or login below.
             </p>
         </div>
-
-        <div class="signInDiv">
-            <div class="pullSignDiv">
-                <div class="pullInstructDiv">
-                    <p class="pullInstructP">
-                        Sign-In
-                    </p>
-                </div>
-                <div class="pullOutCredDiv">
-                    <div class="formHolderDiv">
-                        <form id="signInForm" name="signInForm" onload="" action="" METHOD="GET">
-                            <div class="fieldHoldersDiv">
-                                {{/* USERNAME ENTRY */}}
-                                <div class="usernameDivForm">
-                                    <p class="FieldTextP">Username:</p>
-                                </div>
-                                <div class="usernameDivFormValue">
-                                    <input type="text" name="usernameSIN" id="usernameSIN" placeholder="USERNAME" required
-                                    minlength=1 maxlength=20/>
-                                </div>
-                                {{/* PASSWORD ENTRY */}}
-                                <div class="passwordDivForm">
-                                    <p class="FieldTextP">Password:</p>
-                                </div>
-                                <div class="passwordDivFormValue">
-                                    <input type="password" name="passwordSIN" id="passwordSIN" placeholder="password" required
-                                    minlength=1 maxlength=20/>
-                                </div>
-                                {{/* SUBMIT BUTTON DIV */}}
-                                <div class="buttonSubmitDiv">
-                                    <input type="button" name="submitButton" id="submitButton" value="SUBMIT"
-                                    onclick="checkSignIn(this.form)">
-                                </div>
-                                {{/* HIDDEN FORM VALUES FOR REQUEST FUNCTIONALITY */}}
-                                <input type="hidden" id="inputSIN" name="inputSIN" value="signin">
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        <div>
-
+        {{/* Here is our div that handles creating accounts */}}
         <div class="createAccountDiv">
             <div class="pullSignDiv">
                 <div class="pullInstructDiv">
-                    <p class="pullInstructP">
+                    <p class="pullInstructP" onclick="revealnhideCreate()">
                         Create Account
                     </p>
                 </div>
-                <div class="pullOutCredDiv">
+                <div class="pullOutCredDiv2" id="pullOutCredDiv2" hidden>
                     <div class="formHolderDiv">
                         <form id="createAccountForm" name="createAccountForm" onload="" action="" METHOD="GET">
                             <div class="fieldHoldersDiv">
@@ -120,9 +80,60 @@
                             </div>
                         </form>
                     </div>
+                    <div class="formInformerDiv" id="formInformerCreate" hidden>
+                        <p class="formInfoP" id="formInfoCreateP">
+
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
+        {{/* Here is our div that handles signing in */}}
+        <div class="signInDiv">
+            <div class="pullSignDiv">
+                <div class="pullInstructDiv">
+                    <p class="pullInstructP" onclick="revealnhideSignIn()">
+                        Sign-In
+                    </p>
+                </div>
+                <div class="pullOutCredDiv" id="pullOutCredDiv1" hidden>
+                    <div class="formHolderDiv">
+                        <form id="signInForm" name="signInForm" onload="" action="" METHOD="GET">
+                            <div class="fieldHoldersDiv">
+                                {{/* USERNAME ENTRY */}}
+                                <div class="usernameDivForm">
+                                    <p class="FieldTextP">Username:</p>
+                                </div>
+                                <div class="usernameDivFormValue">
+                                    <input type="text" name="usernameSIN" id="usernameSIN" placeholder="USERNAME" required
+                                    minlength=1 maxlength=20/>
+                                </div>
+                                {{/* PASSWORD ENTRY */}}
+                                <div class="passwordDivForm">
+                                    <p class="FieldTextP">Password:</p>
+                                </div>
+                                <div class="passwordDivFormValue">
+                                    <input type="password" name="passwordSIN" id="passwordSIN" placeholder="password" required
+                                    minlength=1 maxlength=20/>
+                                </div>
+                                {{/* SUBMIT BUTTON DIV */}}
+                                <div class="buttonSubmitDiv">
+                                    <input type="button" name="submitButton" id="submitButton" value="SUBMIT"
+                                    onclick="checkSignIn(this.form)">
+                                </div>
+                                {{/* HIDDEN FORM VALUES FOR REQUEST FUNCTIONALITY */}}
+                                <input type="hidden" id="inputSIN" name="inputSIN" value="signin">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="formInformerDiv" id="formInformerSignIn" hidden>
+                        <p class="formInfoP" id="formInfoSignInP">
+
+                        </p>
+                    </div>
+                </div>
+            </div>
+        <div>
         
         {{/* Here is our footer */}}
     </body>

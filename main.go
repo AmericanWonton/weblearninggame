@@ -1,17 +1,24 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"math/rand"
 	"net/http"
 	"os"
+	"strings"
 	"text/template"
 	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 )
+
+/* INFORMATION FOR OUR EMAIL VARIABLES */
+var senderAddress string
+var senderPWord string
 
 /* TEMPLATE DEFINITION BEGINNING */
 var template1 *template.Template
@@ -29,13 +36,89 @@ func indexPage(w http.ResponseWriter, r *http.Request) {
 	HandleError(w, err1)
 }
 
+//Login Page to handle credential checks to enter our site.
 func loginPage(w http.ResponseWriter, r *http.Request) {
 	loggedIn := false
 	if loggedIn == true {
 
 	} else {
-		err1 := template1.ExecuteTemplate(w, "loginPage.gohtml", nil)
-		HandleError(w, err1)
+		if r.Method == http.MethodPost {
+			/* DETERMINE IF THIS IS CREATING AN ACCOUNT OR LOGGING IN,
+			THEN DIRECT USERS TO THE APPROPRIATE SPOT IF SUCCESSFUL */
+			//Collect JSON
+			bs, err := ioutil.ReadAll(r.Body)
+			if err != nil {
+				fmt.Println(err)
+			}
+			//Declare DataType from Ajax
+			type UserData struct {
+				ThePlayer Player `json:"ThePlayer"`
+				Action    string `json:"Action"`
+				PassConf  string `json:"PassConf"`
+			}
+			//Marshal all neccessary data
+			var dataPosted UserData
+			json.Unmarshal(bs, &dataPosted)
+			logWriter("User given through Ajax: " + string(bs))
+			//Assign values from data
+			username := dataPosted.ThePlayer.Username
+			password := dataPosted.ThePlayer.Password
+			email := dataPosted.ThePlayer.Email
+			action := dataPosted.Action
+			passConf := dataPosted.PassConf
+			//Declare a message to send back to Ajax if this fails and why
+			type successMSG struct {
+				Message   string `json:"Message"`
+				ResultNum int    `json:"ResultNum"`
+			}
+			/* DETERMINE IF THIS IS SIGNING IN OR CREATING ACCOUNT */
+			if strings.Contains(action, "createuser") {
+
+				/* ATTEMPT TO SEND USER AN EMAIL; IF IT FAILS, GIVE ERROR MESSGAE TO AJAX */
+				emailSend, theErr := sendEmailToPlayer(email, dataPosted.ThePlayer)
+				if emailSend == false {
+					//Inform User of failure
+					//Log error and return Ajax with failure
+					message := "Error with sending Player email: " + theErr.Error()
+					fmt.Printf("DEBUG: %v\n", message)
+					logWriter(message)
+					successSend := successMSG{
+						Message:   message,
+						ResultNum: -1,
+					}
+					theJSONMessage, err := json.Marshal(successSend)
+					if err != nil {
+						fmt.Println(err)
+						logWriter(err.Error())
+					}
+					fmt.Fprint(w, string(theJSONMessage))
+				} else {
+					//Begin Creating Player User in database
+				}
+			} else if strings.Contains(action, "signin") {
+
+			} else {
+				//Log error and return Ajax with failure
+				message := "Error with User Post; wrong action: " + action
+				fmt.Printf("DEBUG: %v\n", message)
+				logWriter(message)
+				successSend := successMSG{
+					Message:   message,
+					ResultNum: 0,
+				}
+				theJSONMessage, err := json.Marshal(successSend)
+				if err != nil {
+					fmt.Println(err)
+					logWriter(err.Error())
+				}
+				fmt.Fprint(w, string(theJSONMessage))
+			}
+
+		} else {
+			//Just serve this page normally and allow User to login or create account
+			err1 := template1.ExecuteTemplate(w, "loginPage.gohtml", nil)
+			HandleError(w, err1)
+		}
 	}
 }
 
