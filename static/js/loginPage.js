@@ -32,6 +32,34 @@ window.addEventListener('DOMContentLoaded', function(){
     xhr.send(userName.value);
 })
 
+//Check Username when input is given
+usernameSINCreate.addEventListener('input', function(){
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/checkUsername', true);
+    xhr.addEventListener('readystatechange', function(){
+        if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200){
+            var item = xhr.responseText;
+            if (item == 'TooShort') {
+                formInformerCreate.innerHTML = 'Please enter a Username with 5 or more characters';
+                document.querySelector('#submitButtonCreate').disabled = true;
+            } else if (item == 'TooLong'){
+                formInformerCreate.innerHTML = 'Username must be under 20 characters';
+                document.querySelector('#submitButtonCreate').disabled = true;
+            } else if (item == 'ContainsLanguage'){
+                formInformerCreate.textContent = 'Username is innapropriate';
+                document.querySelector('#submitButtonCreate').disabled = true;
+            } else if (item == 'true') {
+                formInformerCreate.textContent = 'Username taken - Try another name!';
+                document.querySelector('#submitButtonCreate').disabled = true;
+            } else {
+                formInformerCreate.textContent = '';
+                document.querySelector('#submitButtonCreate').disabled = false;
+            }
+        }
+    });
+    xhr.send(usernameSINCreate.value);
+});
+
 function checkSignIn(signInForm){
     var username = signInForm.usernameSIN.value;
     var password = signInForm.passwordSIN.value;
@@ -141,9 +169,35 @@ function checkUserName(givenUsername){
         formInformerCreate.innerHTML = "Username must be between 6 and 20 characters.";
         goodUsername = false;
     }
-    //Language check
-
-    //Check to see if Username is taken
+    //Language check and see if Username is taken
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/checkUsername', true);
+    xhr.addEventListener('readystatechange', function(){
+        if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200){
+            var item = xhr.responseText;
+            if (item == 'TooShort') {
+                formInformerCreate.innerHTML = 'Please enter a Username with 5 or more characters';
+                document.querySelector('#submitButtonCreate').disabled = true;
+                goodUsername = false;
+            } else if (item == 'TooLong'){
+                formInformerCreate.innerHTML = 'Username must be under 20 characters';
+                document.querySelector('#submitButtonCreate').disabled = true;
+                goodUsername = false;
+            } else if (item == 'ContainsLanguage'){
+                formInformerCreate.textContent = 'Username is innapropriate';
+                document.querySelector('#submitButtonCreate').disabled = true;
+                goodUsername = false;
+            } else if (item == 'true') {
+                formInformerCreate.textContent = 'Username taken - Try another name!';
+                document.querySelector('#submitButtonCreate').disabled = true;
+                goodUsername = false;
+            } else {
+                formInformerCreate.textContent = '';
+                document.querySelector('#submitButtonCreate').disabled = false;
+            }
+        }
+    });
+    xhr.send(usernameSINCreate.value);
 
     return goodUsername;
 }

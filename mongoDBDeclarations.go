@@ -147,6 +147,25 @@ func getAllPlayers() (map[string]bool, bool) {
 }
 
 //simple creation of Player, no API
-func simplePlayerCreate() {
+func simplePlayerCreate(thePlayer Player) bool {
+	fmt.Printf("DEBUG: Creating player in simplePlayerCreate: %v\n", thePlayer)
+	successfulCreate := true //Determines if creation of this Player was successful
 
+	//Insert Player
+	playerCollection := mongoClient.Database("learningdb").Collection("players") //Here's our collection
+	collectedPlayers := []interface{}{thePlayer}
+	//Insert Our Data
+	_, err := playerCollection.InsertMany(theContext, collectedPlayers)
+	//Set return status accordingly
+	if err != nil {
+		errMessage := "Error inserting this Player from simplePlayerCreate: " + err.Error()
+		fmt.Println(errMessage)
+		logWriter(errMessage)
+		successfulCreate = false
+	} else {
+		successMessage := "Player submitted successsfully: "
+		logWriter(successMessage)
+	}
+
+	return successfulCreate
 }

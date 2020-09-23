@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/hex"
 	"fmt"
 	"math/rand"
 	"strconv"
@@ -9,7 +10,7 @@ import (
 )
 
 type Player struct {
-	UserID      string `json:"UserID"`
+	UserID      int    `json:"UserID"`
 	Email       string `json:"Email"`
 	Username    string `json:"Username"`
 	Password    string `json:"Password"`
@@ -105,4 +106,12 @@ func idCreation(whichObject string) int {
 	}
 
 	return finalID
+}
+
+//Encrypts Password for User
+func passwordEncrypt(thePassword string) string {
+	bsString := []byte(thePassword)               //Encode Password
+	encodedString := hex.EncodeToString(bsString) //Encode Password Pt2
+
+	return encodedString
 }

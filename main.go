@@ -94,6 +94,47 @@ func loginPage(w http.ResponseWriter, r *http.Request) {
 					fmt.Fprint(w, string(theJSONMessage))
 				} else {
 					//Begin Creating Player User in database
+					theTimeNow := time.Now() //Time Definition
+					playerSend := Player{
+						UserID:      idCreation("Player"),
+						Email:       email,
+						Username:    username,
+						Password:    passwordEncrypt(password),
+						DateCreated: theTimeNow.Format("2006-01-02 15:04:05"),
+						DateUpdated: theTimeNow.Format("2006-01-02 15:04:05"),
+					}
+					createSuccessfully := simplePlayerCreate(playerSend)
+					//Relay news if created successfully or not
+					if createSuccessfully == true {
+						//Send success message
+						message := "Player created successfully"
+						fmt.Printf("DEBUG: %v\n", message)
+						logWriter(message)
+						successSend := successMSG{
+							Message:   message,
+							ResultNum: 1,
+						}
+						theJSONMessage, err := json.Marshal(successSend)
+						if err != nil {
+							fmt.Println(err)
+							logWriter(err.Error())
+						}
+						fmt.Fprint(w, string(theJSONMessage))
+					} else {
+						//Log error and return Ajax with failure
+						message := "Error with Player insretion"
+						fmt.Printf("DEBUG: %v\n", message)
+						successSend := successMSG{
+							Message:   message,
+							ResultNum: -2,
+						}
+						theJSONMessage, err := json.Marshal(successSend)
+						if err != nil {
+							fmt.Println(err)
+							logWriter(err.Error())
+						}
+						fmt.Fprint(w, string(theJSONMessage))
+					}
 				}
 			} else if strings.Contains(action, "signin") {
 
