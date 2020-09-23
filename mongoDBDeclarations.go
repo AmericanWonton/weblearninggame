@@ -109,6 +109,43 @@ func checkObjectID(whichObject string, theID int) (bool, string) {
 	return idReturned, returnedError
 }
 
+//Get all Players Simple, no API
+func getAllPlayers() (map[string]bool, bool) {
+	theUsernames := make(map[string]bool)                                        //Map of Usernames to return
+	goodCheck := true                                                            //Determines if everyting went succesfully
+	playerCollection := mongoClient.Database("learningdb").Collection("players") //Here's our collection
+	//Give 0 values to determine if these IDs are found
+	theFilter := bson.M{}
+	findOptions := options.Find()
+	curPlayer, err := playerCollection.Find(theContext, theFilter, findOptions)
+	if err != nil {
+		if strings.Contains(err.Error(), "no documents in result") {
+			errMessage := "No documents were returned for Player search in getAllPlayers"
+			fmt.Println(errMessage)
+			logWriter(errMessage)
+		} else {
+			errMessage := "There was another error returning Players in getAllPlayers: " + err.Error()
+			fmt.Println(errMessage)
+			logWriter(errMessage)
+			goodCheck = false
+		}
+	}
+	//Add player to map of players
+	for curPlayer.Next(theContext) {
+		var thePlayer Player
+		err := curPlayer.Decode(&thePlayer)
+		if err != nil {
+			errMsg := "Error trying to decode player from Mongo in getAllPlayers: " + err.Error()
+			fmt.Println(errMsg)
+			logWriter(errMsg)
+			goodCheck = false
+		}
+		theUsernames[thePlayer.Username] = true //Add this username with the bool
+	}
+
+	return theUsernames, goodCheck
+}
+
 //simple creation of Player, no API
 func simplePlayerCreate() {
 

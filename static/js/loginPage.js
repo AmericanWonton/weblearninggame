@@ -12,7 +12,25 @@ var passwordConfSINCreate = document.getElementById("passwordConfSINCreate");
 var emailSINCreate = document.getElementById("emailSINCreate");
 var inputSINCreate = document.getElementById("inputSINCreate");
 
-
+//Load all Username values to check
+window.addEventListener('DOMContentLoaded', function(){
+    console.log("DEBUG: Loading all Usernames for field validations.");
+    //Send Ajax to query our MongoDB with Golang
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/loadUsernames', true);
+    xhr.addEventListener('readystatechange', function(){
+        if(xhr.readyState == XMLHttpRequest.DONE && xhr.status === 200) {
+            var item = xhr.responseText;
+            console.log(item);
+            if (item == 'true') {
+                console.log("We successfully loaded all the data");
+            } else {
+                console.log("Data was NOT successfully loaded.");
+            }
+        }
+    });
+    xhr.send(userName.value);
+})
 
 function checkSignIn(signInForm){
     var username = signInForm.usernameSIN.value;

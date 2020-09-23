@@ -130,6 +130,8 @@ func handleRequests() {
 	//Serving Webpages
 	myRouter.HandleFunc("/", indexPage)
 	myRouter.HandleFunc("/loginPage", loginPage)
+	//Validation checking
+	myRouter.HandleFunc("/loadUsernames", loadUsernames) //Loads Usernames
 	//Middleware logging
 	myRouter.Handle("/", loggingMiddleware(http.HandlerFunc(logHandler)))
 	//Serve our static files
