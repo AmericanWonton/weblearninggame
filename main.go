@@ -65,7 +65,6 @@ func loginPage(w http.ResponseWriter, r *http.Request) {
 			password := dataPosted.ThePlayer.Password
 			email := dataPosted.ThePlayer.Email
 			action := dataPosted.Action
-			passConf := dataPosted.PassConf
 			//Declare a message to send back to Ajax if this fails and why
 			type successMSG struct {
 				Message   string `json:"Message"`
@@ -73,7 +72,6 @@ func loginPage(w http.ResponseWriter, r *http.Request) {
 			}
 			/* DETERMINE IF THIS IS SIGNING IN OR CREATING ACCOUNT */
 			if strings.Contains(action, "createuser") {
-
 				/* ATTEMPT TO SEND USER AN EMAIL; IF IT FAILS, GIVE ERROR MESSGAE TO AJAX */
 				emailSend, theErr := sendEmailToPlayer(email, dataPosted.ThePlayer)
 				if emailSend == false {
@@ -137,7 +135,65 @@ func loginPage(w http.ResponseWriter, r *http.Request) {
 					}
 				}
 			} else if strings.Contains(action, "signin") {
-
+				/* QUERY MONGO TO RETURN A USER WITH THIS USERNAME,(also checks if password matches) */
+				returnedPlayer, anErr := getAPlayer(username, password)
+				switch anErr {
+				case "all good":
+					//Player found, load mainpage with this information
+					//User found for Username/Password; update session with information
+					createNewSession(w, returnedPlayer)
+					http.Redirect(w, r, "/mainPage", http.StatusSeeOther)
+					break
+				case "all bad":
+					//There was an error somewhere...go back to login page and inform Player/User
+					message := "Unique error for Player while logging in: " + anErr
+					fmt.Printf("DEBUG: %v\n", message)
+					logWriter(message)
+					successSend := successMSG{
+						Message:   message,
+						ResultNum: 0,
+					}
+					theJSONMessage, err := json.Marshal(successSend)
+					if err != nil {
+						fmt.Println(err)
+						logWriter(err.Error())
+					}
+					fmt.Fprint(w, string(theJSONMessage))
+					break
+				case "password bad":
+					//Inform User that they entered the wrong password in Ajax
+					//Log error and return Ajax with failure
+					message := "Incorrect Password entered: " + password
+					fmt.Printf("DEBUG: %v\n", message)
+					logWriter(message)
+					successSend := successMSG{
+						Message:   message,
+						ResultNum: -3,
+					}
+					theJSONMessage, err := json.Marshal(successSend)
+					if err != nil {
+						fmt.Println(err)
+						logWriter(err.Error())
+					}
+					fmt.Fprint(w, string(theJSONMessage))
+					break
+				default:
+					//Unexpected switch output; return an error to Ajax
+					message := "Error with User Post; wrong action for Player check: " + anErr
+					fmt.Printf("DEBUG: %v\n", message)
+					logWriter(message)
+					successSend := successMSG{
+						Message:   message,
+						ResultNum: 0,
+					}
+					theJSONMessage, err := json.Marshal(successSend)
+					if err != nil {
+						fmt.Println(err)
+						logWriter(err.Error())
+					}
+					fmt.Fprint(w, string(theJSONMessage))
+					break
+				}
 			} else {
 				//Log error and return Ajax with failure
 				message := "Error with User Post; wrong action: " + action
@@ -163,6 +219,56 @@ func loginPage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//Main Page
+func mainPage(w http.ResponseWriter, r *http.Request) {
+	/* CHECK TO SEE IF USER HAS THE CORRECT COOKIE CREDENTIALS TO STAY LOGGED IN */
+	if !alreadyLoggedIn(w, r) {
+		//No login information for given session username. Returning to login screen
+		errMsg := "No given information for username session. Going back to login screen."
+		fmt.Println(errMsg)
+		logWriter(errMsg)
+		http.Redirect(w, r, "/loginPage", http.StatusSeeOther)
+	} else {
+		//Player session found, get player information to pass onto the mainpage
+		//Get Player for information gathering
+		thePlayer, theErr := getUser(w, r)
+		//Put User back to login screen if there's an error
+		switch theErr {
+		case "all good":
+			//All good, display mainpage with user stats
+			mpViewData := MPViewData{
+				thePlayer, thePlayer.Username, thePlayer.UserID,
+			}
+			err1 := template1.ExecuteTemplate(w, "mainpage.gohtml", mpViewData)
+			HandleError(w, err1)
+			break
+		case "missing username":
+			//No Username for session/Player...return to login screen
+			errMsg := "Missing Username for session."
+			fmt.Println(errMsg)
+			logWriter(errMsg)
+			http.Redirect(w, r, "/loginPage", http.StatusSeeOther)
+			break
+		case "missing password":
+			//No Password for session/Player...return to login screen
+			errMsg := "Missing Password for session."
+			fmt.Println(errMsg)
+			logWriter(errMsg)
+			http.Redirect(w, r, "/loginPage", http.StatusSeeOther)
+			break
+		default:
+			//Wrong error message given, go back to login page.
+			errMsg := "Wrong switch statement given for session check in mainPage: " + theErr
+			fmt.Println(errMsg)
+			logWriter(errMsg)
+			http.Redirect(w, r, "/loginPage", http.StatusSeeOther)
+			break
+		}
+
+	}
+
+}
+
 //Handles all incoming requests
 func handleRequests() {
 	myRouter := mux.NewRouter().StrictSlash(true)
@@ -171,6 +277,7 @@ func handleRequests() {
 	//Serving Webpages
 	myRouter.HandleFunc("/", indexPage)
 	myRouter.HandleFunc("/loginPage", loginPage)
+	myRouter.HandleFunc("/mainPage", mainPage)
 	//Validation checking
 	myRouter.HandleFunc("/loadUsernames", loadUsernames) //Loads Usernames
 	//Middleware logging

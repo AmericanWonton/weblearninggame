@@ -146,6 +146,62 @@ func getAllPlayers() (map[string]bool, bool) {
 	return theUsernames, goodCheck
 }
 
+//Get a single Player Simple, no API
+func getAPlayer(theUsername string, thePassword string) (Player, string) {
+	returnedError := "all good"
+	var returnedPlayer Player
+
+	//Query DB for this Player
+	playerCollection := mongoClient.Database("superdbtest1").Collection("players") //here's our collection
+	filter := bson.D{{"username", theUsername}}                                    //Here's our filter to look for
+	//Here's how to find and assign multiple Documents using a cursor
+	// Pass these options to the Find method
+	findOptions := options.Find()
+	cur, err := playerCollection.Find(context.TODO(), filter, findOptions)
+	if err != nil {
+		errMsg := "Error looking through Player db in getAPlayer: " + err.Error()
+		logWriter(errMsg)
+		fmt.Println(errMsg)
+		returnedError = "all bad"
+	}
+	//Loop through results
+	for cur.Next(theContext) {
+		// create a value into which the single document can be decoded
+		err := cur.Decode(&returnedPlayer)
+		if err != nil {
+			errMsg := "Issue writing the current element for Player in getAPlayer: " + err.Error()
+			fmt.Println(errMsg)
+			logWriter(errMsg)
+			returnedError = "all bad"
+		}
+	}
+	if err := cur.Err(); err != nil {
+		errMsg := "Issue looping through Players in getAPlayer: " + err.Error()
+		logWriter(errMsg)
+		fmt.Println(errMsg)
+		returnedError = "all bad"
+	}
+
+	//Check if returned player has password
+	if len(returnedPlayer.Username) <= 0 {
+		returnedError = "all bad"
+	} else if len(returnedPlayer.Password) <= 0 {
+		returnedError = "all bad"
+	} else {
+		//Password and Username are good so far
+	}
+
+	//Check if password entered matches password in db
+	passOK := checkPassword(returnedPlayer.Password, thePassword)
+	if passOK == true {
+		//Password is good
+	} else {
+		returnedError = "password bad"
+	}
+
+	return returnedPlayer, returnedError
+}
+
 //simple creation of Player, no API
 func simplePlayerCreate(thePlayer Player) bool {
 	fmt.Printf("DEBUG: Creating player in simplePlayerCreate: %v\n", thePlayer)

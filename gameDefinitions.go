@@ -5,9 +5,16 @@ import (
 	"fmt"
 	"math/rand"
 	"strconv"
+	"strings"
 
 	"gopkg.in/gomail.v2"
 )
+
+type MPViewData struct {
+	ThePlayer Player `json:"ThePlayer"`
+	Username  string `json:"Username"`
+	UserID    int    `json:"UserID"`
+} //Main Page data passed to the Golang HTML
 
 type Player struct {
 	UserID      int    `json:"UserID"`
@@ -16,7 +23,7 @@ type Player struct {
 	Password    string `json:"Password"`
 	DateCreated string `json:"DateCreated"`
 	DateUpdated string `json:"DateUpdated"`
-}
+} //Players of our game
 
 //Send email to Player when creating account
 func sendEmailToPlayer(theEmail string, thePlayer Player) (bool, error) {
@@ -108,10 +115,33 @@ func idCreation(whichObject string) int {
 	return finalID
 }
 
-//Encrypts Password for User
+//Encrypts Password for Player
 func passwordEncrypt(thePassword string) string {
 	bsString := []byte(thePassword)               //Encode Password
 	encodedString := hex.EncodeToString(bsString) //Encode Password Pt2
 
 	return encodedString
+}
+
+//Checks if Password matches for Player
+func checkPassword(thePassword string, passwordEntered string) bool {
+	passwordMatches := true
+
+	hexCodePWord, err := hex.DecodeString(thePassword)
+	if err != nil {
+		errMsg := "The hexing failed for this password: " + thePassword + " " + err.Error()
+		logWriter(errMsg)
+		fmt.Println(errMsg)
+		passwordMatches = false
+	} else {
+		if strings.Compare(string(hexCodePWord), passwordEntered) != 0 {
+			//Passwords aren't compatible
+			errMsg := "Bad login; this is the wrong password: " + passwordEntered
+			fmt.Println(errMsg)
+			logWriter(errMsg)
+		} else {
+			//Password is good
+		}
+	}
+	return passwordMatches
 }
